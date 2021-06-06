@@ -9,4 +9,5 @@ public interface SubmissionService {
     void deleteSubmission(RejectionDTO rejectionDTO);
     void rejectSubmission(RejectionDTO rejectionDTO);
     void acceptSubmission(String title);
+    void publishSubmission(String title);
 }

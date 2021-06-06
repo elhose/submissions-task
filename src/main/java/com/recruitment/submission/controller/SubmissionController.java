@@ -46,4 +46,10 @@ public class SubmissionController {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
+    @PostMapping("publish")
+    public ResponseEntity<HttpStatus> publish(@RequestBody TitleDTO titleDTO) {
+        submissionService.publishSubmission(titleDTO.getTitle());
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
 }

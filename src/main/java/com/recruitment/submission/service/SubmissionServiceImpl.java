@@ -9,8 +9,10 @@ import com.recruitment.submission.repository.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +70,16 @@ public class SubmissionServiceImpl implements SubmissionService {
         }, () -> throwNewIllegalArgumentException(title, SubmissionStatus.VERIFIED));
     }
 
+    @Override
+    public void publishSubmission(String title) {
+        Optional<Submission> found = submissionRepository.findByTitleAndStatus(title, SubmissionStatus.ACCEPTED);
+        found.ifPresentOrElse(foundSubmission -> {
+            foundSubmission.setStatus(SubmissionStatus.PUBLISHED);
+            foundSubmission.setPublicId(generatePublicId());
+            submissionRepository.save(foundSubmission);
+        }, () -> throwNewIllegalArgumentException(title, SubmissionStatus.ACCEPTED));
+    }
+
     private void checkForNull(String parameter) {
         if (parameter == null || parameter.isEmpty()) {
             throw new IllegalArgumentException("Submission body doesn't have necessary fields!");
@@ -79,5 +91,9 @@ public class SubmissionServiceImpl implements SubmissionService {
             throw new IllegalArgumentException("Submission with provided title: " + title + " doesn't exist!");
         }
         throw new IllegalArgumentException("Submission with provided title: " + title + " doesn't exists or doesn't have status in" + Arrays.toString(statuses) + " set!");
+    }
+
+    private long generatePublicId() {
+        return ByteBuffer.wrap(UUID.randomUUID().toString().getBytes()).asLongBuffer().get();
     }
 }
