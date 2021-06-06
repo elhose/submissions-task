@@ -1,14 +1,12 @@
 package com.recruitment.submission.controller;
 
+import com.recruitment.submission.dto.RejectionDTO;
 import com.recruitment.submission.dto.SubmissionDTO;
 import com.recruitment.submission.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +25,12 @@ public class SubmissionController {
     public ResponseEntity<HttpStatus> verify(@RequestBody SubmissionDTO verifiedSubmission) {
         submissionService.verifySubmission(verifiedSubmission);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("delete")
+    public ResponseEntity<HttpStatus> delete(@RequestBody RejectionDTO rejectionDTO) {
+        submissionService.deleteSubmission(rejectionDTO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

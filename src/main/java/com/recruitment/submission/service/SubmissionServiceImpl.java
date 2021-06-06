@@ -1,5 +1,6 @@
 package com.recruitment.submission.service;
 
+import com.recruitment.submission.dto.RejectionDTO;
 import com.recruitment.submission.dto.SubmissionDTO;
 import com.recruitment.submission.entity.Submission;
 import com.recruitment.submission.entity.SubmissionStatus;
@@ -33,6 +34,17 @@ public class SubmissionServiceImpl implements SubmissionService {
             foundSubmission.setStatus(SubmissionStatus.VERIFIED);
             submissionRepository.save(foundSubmission);
         }, () -> throwNewIllegalArgumentException(updatedContent.getTitle(), SubmissionStatus.CREATED));
+    }
+
+    @Override
+    public void deleteSubmission(RejectionDTO rejectionDTO) {
+        checkForNull(rejectionDTO.getReason());
+        Optional<Submission> found = submissionRepository.findByTitleAndStatus(rejectionDTO.getTitle(), SubmissionStatus.CREATED);
+        found.ifPresentOrElse(foundSubmission -> {
+            foundSubmission.setReason(rejectionDTO.getReason());
+            foundSubmission.setStatus(SubmissionStatus.DELETED);
+            submissionRepository.save(foundSubmission);
+        }, () -> throwNewIllegalArgumentException(rejectionDTO.getTitle(), SubmissionStatus.CREATED));
     }
 
     private void checkForNull(String parameter) {
