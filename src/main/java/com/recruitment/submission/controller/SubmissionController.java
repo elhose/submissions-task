@@ -23,4 +23,10 @@ public class SubmissionController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PostMapping("verify")
+    public ResponseEntity<HttpStatus> verify(@RequestBody SubmissionDTO verifiedSubmission) {
+        submissionService.verifySubmission(verifiedSubmission);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
 }
