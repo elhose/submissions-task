@@ -2,6 +2,7 @@ package com.recruitment.submission.controller;
 
 import com.recruitment.submission.dto.RejectionDTO;
 import com.recruitment.submission.dto.SubmissionDTO;
+import com.recruitment.submission.dto.TitleDTO;
 import com.recruitment.submission.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,12 @@ public class SubmissionController {
     public ResponseEntity<HttpStatus> reject(@RequestBody RejectionDTO rejectionDTO) {
         submissionService.rejectSubmission(rejectionDTO);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("accept")
+    public ResponseEntity<HttpStatus> accept(@RequestBody TitleDTO titleDTO) {
+        submissionService.acceptSubmission(titleDTO.getTitle());
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
 }

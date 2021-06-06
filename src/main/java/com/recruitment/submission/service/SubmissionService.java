@@ -8,4 +8,5 @@ public interface SubmissionService {
     void verifySubmission(SubmissionDTO updatedContent);
     void deleteSubmission(RejectionDTO rejectionDTO);
     void rejectSubmission(RejectionDTO rejectionDTO);
+    void acceptSubmission(String title);
 }

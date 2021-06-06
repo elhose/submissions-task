@@ -59,6 +59,15 @@ public class SubmissionServiceImpl implements SubmissionService {
         }, () -> throwNewIllegalArgumentException(rejectionDTO.getTitle(), requiredStatuses));
     }
 
+    @Override
+    public void acceptSubmission(String title) {
+        Optional<Submission> found = submissionRepository.findByTitleAndStatus(title, SubmissionStatus.VERIFIED);
+        found.ifPresentOrElse(foundSubmission -> {
+            foundSubmission.setStatus(SubmissionStatus.ACCEPTED);
+            submissionRepository.save(foundSubmission);
+        }, () -> throwNewIllegalArgumentException(title, SubmissionStatus.VERIFIED));
+    }
+
     private void checkForNull(String parameter) {
         if (parameter == null || parameter.isEmpty()) {
             throw new IllegalArgumentException("Submission body doesn't have necessary fields!");
