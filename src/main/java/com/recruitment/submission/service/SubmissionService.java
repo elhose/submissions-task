@@ -7,4 +7,5 @@ public interface SubmissionService {
     void createSubmission(SubmissionDTO submissionDTO);
     void verifySubmission(SubmissionDTO updatedContent);
     void deleteSubmission(RejectionDTO rejectionDTO);
+    void rejectSubmission(RejectionDTO rejectionDTO);
 }

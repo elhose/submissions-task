@@ -33,4 +33,10 @@ public class SubmissionController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping("reject")
+    public ResponseEntity<HttpStatus> reject(@RequestBody RejectionDTO rejectionDTO) {
+        submissionService.rejectSubmission(rejectionDTO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
