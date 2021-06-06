@@ -1,9 +1,7 @@
 package com.recruitment.submission.service;
 
-import com.recruitment.submission.entity.Submission;
-
-import java.util.List;
+import com.recruitment.submission.dto.SubmissionDTO;
 
 public interface SubmissionService {
-    List<Submission> getAll();
+    void createSubmission(SubmissionDTO submissionDTO);
 }
