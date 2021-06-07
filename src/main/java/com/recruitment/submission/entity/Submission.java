@@ -6,13 +6,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
+@Table(name = "current_submission")
 public class Submission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "submission_id")
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -27,6 +31,10 @@ public class Submission {
     private String reason;
 
     private Long publicId;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk", referencedColumnName = "submission_id")
+    private Set<HistorySubmission> history = new HashSet<>();
 
     @CreationTimestamp
     private LocalDateTime createDateTime;

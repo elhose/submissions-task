@@ -32,7 +32,9 @@ public class SubmissionServiceImpl implements SubmissionService {
         checkForNull(updatedContent.getContent());
         Optional<Submission> found = submissionRepository.findByTitleAndStatus(updatedContent.getTitle(), SubmissionStatus.CREATED);
         found.ifPresentOrElse(foundSubmission -> {
+            var historySubmission = mapper.entityToHistory(foundSubmission);
             foundSubmission.setContent(updatedContent.getContent());
+            foundSubmission.getHistory().add(historySubmission);
             foundSubmission.setStatus(SubmissionStatus.VERIFIED);
             submissionRepository.save(foundSubmission);
         }, () -> throwNewIllegalArgumentException(updatedContent.getTitle(), SubmissionStatus.CREATED));
@@ -43,7 +45,9 @@ public class SubmissionServiceImpl implements SubmissionService {
         checkForNull(rejectionDTO.getReason());
         Optional<Submission> found = submissionRepository.findByTitleAndStatus(rejectionDTO.getTitle(), SubmissionStatus.CREATED);
         found.ifPresentOrElse(foundSubmission -> {
+            var historySubmission = mapper.entityToHistory(foundSubmission);
             foundSubmission.setReason(rejectionDTO.getReason());
+            foundSubmission.getHistory().add(historySubmission);
             foundSubmission.setStatus(SubmissionStatus.DELETED);
             submissionRepository.save(foundSubmission);
         }, () -> throwNewIllegalArgumentException(rejectionDTO.getTitle(), SubmissionStatus.CREATED));
@@ -55,7 +59,9 @@ public class SubmissionServiceImpl implements SubmissionService {
         var requiredStatuses = new SubmissionStatus[]{SubmissionStatus.VERIFIED, SubmissionStatus.ACCEPTED};
         Optional<Submission> found = submissionRepository.findByTitleAndStatusIn(rejectionDTO.getTitle(), Arrays.asList(requiredStatuses));
         found.ifPresentOrElse(foundSubmission -> {
+            var historySubmission = mapper.entityToHistory(foundSubmission);
             foundSubmission.setReason(rejectionDTO.getReason());
+            foundSubmission.getHistory().add(historySubmission);
             foundSubmission.setStatus(SubmissionStatus.REJECTED);
             submissionRepository.save(foundSubmission);
         }, () -> throwNewIllegalArgumentException(rejectionDTO.getTitle(), requiredStatuses));
@@ -65,6 +71,8 @@ public class SubmissionServiceImpl implements SubmissionService {
     public void acceptSubmission(String title) {
         Optional<Submission> found = submissionRepository.findByTitleAndStatus(title, SubmissionStatus.VERIFIED);
         found.ifPresentOrElse(foundSubmission -> {
+            var historySubmission = mapper.entityToHistory(foundSubmission);
+            foundSubmission.getHistory().add(historySubmission);
             foundSubmission.setStatus(SubmissionStatus.ACCEPTED);
             submissionRepository.save(foundSubmission);
         }, () -> throwNewIllegalArgumentException(title, SubmissionStatus.VERIFIED));
@@ -74,6 +82,8 @@ public class SubmissionServiceImpl implements SubmissionService {
     public void publishSubmission(String title) {
         Optional<Submission> found = submissionRepository.findByTitleAndStatus(title, SubmissionStatus.ACCEPTED);
         found.ifPresentOrElse(foundSubmission -> {
+            var historySubmission = mapper.entityToHistory(foundSubmission);
+            foundSubmission.getHistory().add(historySubmission);
             foundSubmission.setStatus(SubmissionStatus.PUBLISHED);
             foundSubmission.setPublicId(generatePublicId());
             submissionRepository.save(foundSubmission);
