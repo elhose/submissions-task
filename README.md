@@ -1,12 +1,12 @@
 # submissions-task
 
-##Description
+## Description
 Application enables users to manage submissions. App provides 8 Endpoints with different functionalities:
  
 ### CREATE
-#####PATH: `/api/create`
+##### PATH: `/api/create`
 
-#####REQUEST BODY: 
+##### REQUEST BODY: 
 `{ 
 "title" : "Your title",
 "content": "Your content"
@@ -15,63 +15,63 @@ Application enables users to manage submissions. App provides 8 Endpoints with d
 This Endpoint allows for creating new submissions. Title names must be _**UNIQUE!**_ (Application allows Users to interact with submissions by their names, so Uniqueness is a must) Title and content must be provided. If request is successful, status of submission is set to **CREATED**      
    
 ### VERIFY
-#####PATH: `/api/verify`
+##### PATH: `/api/verify`
 
-#####REQUEST BODY: 
+##### REQUEST BODY: 
 `{ 
 "title" : "Your title",
 "content": "Your content"
 }` 
                
-This Endpoint allows for verifying submissions with **CREATED** [status](../../../../README.md#CREATE). This endpoint allows for change of submission's content. If no content is supplied, content is not changed. Upon successful verification, status of submission is set to **VERIFIED**      
+This Endpoint allows for verifying submissions with **CREATED** status. This endpoint allows for change of submission's content. If no content is supplied, content is not changed. Upon successful verification, status of submission is set to **VERIFIED**      
    
 ### DELETE
-#####PATH: `/api/delete`
+##### PATH: `/api/delete`
 
-#####REQUEST BODY: 
+##### REQUEST BODY: 
 `{ 
 "title" : "Your title",
 "reason": "Reason why submission is deleted"
 }` 
                
-Not all submissions have to be verified, this Endpoint allows for deleting submissions with **CREATED** [status](../../../../README.md#CREATE). Reason for deleting a submission must be provided to request body. Upon successful deletion, status of submission is set to **DELETED**   
+Not all submissions have to be verified, this Endpoint allows for deleting submissions with **CREATED** status. Reason for deleting a submission must be provided to request body. Upon successful deletion, status of submission is set to **DELETED**   
    
 ### REJECT
-#####PATH: `/api/reject`
+##### PATH: `/api/reject`
 
-#####REQUEST BODY: 
+##### REQUEST BODY: 
 `{ 
 "title" : "Your title",
 "reason": "Reason why submission is rejected"
 }` 
                
-This Endpoint allows for rejecting submissions with **VERIFIED** [status](../../../../README.md#VERIFY) or **ACCEPTED** [status](../../../../README.md#ACCEPT). Reason for rejecting a submission must be provided to request body. Upon successful rejection, status of submission is set to **REJECTED**     
+This Endpoint allows for rejecting submissions with **VERIFIED** or **ACCEPTED** status. Reason for rejecting a submission must be provided to request body. Upon successful rejection, status of submission is set to **REJECTED**     
    
 ### ACCEPT
-#####PATH: `/api/accept`
+##### PATH: `/api/accept`
 
-#####REQUEST BODY: 
+##### REQUEST BODY: 
 `{ 
 "title" : "Your title"
 }` 
                
-If submission has **VERIFIED** [status](../../../../README.md#VERIFY) and submission is correct, it can be accepted. Endpoint is not using RequestParams, because title may have whitespaces, and it standardizes the use of the app. Upon acceptation, status of submission is set to **ACCEPTED**     
+If submission has **VERIFIED** status and submission is correct, it can be accepted. Endpoint is not using RequestParams, because title may have whitespaces, and it standardizes the use of the app. Upon acceptation, status of submission is set to **ACCEPTED**     
    
 ### PUBLISH
-#####PATH: `/api/publish`
+##### PATH: `/api/publish`
 
-#####REQUEST BODY: 
+##### REQUEST BODY: 
 `{ 
 "title" : "Your title"
 }` 
                
-If submission has **ACCEPTED** [status](../../../../README.md#ACCEPT) and submission is still correct, it can be published. When submission is published, it receives generated numeric ID. Upon publishing, status of submission is set to **PUBLISHED**     
+If submission has **ACCEPTED** status and submission is still correct, it can be published. When submission is published, it receives generated numeric ID. Upon publishing, status of submission is set to **PUBLISHED**     
    
 
 ### CURRENT
-#####PATH: `/api/current`
+##### PATH: `/api/current`
   
-#####REQUEST PARAMETERS (optional): 
+##### REQUEST PARAMETERS (optional): 
 - `title`
 - `status`
 
@@ -79,9 +79,9 @@ This endpoint returns paginated view (default 10 submissions per page) of all su
    
 
 ### HISTORY
-#####PATH: `/api/history`
+##### PATH: `/api/history`
 
-#####REQUEST BODY: 
+##### REQUEST BODY: 
 `{ 
 "title" : "Your title"
 }` 
@@ -90,7 +90,7 @@ This endpoint returns paginated view (default 10 submissions per page) of all su
 This endpoint returns history of submissions, sorted by change of state in descending order.                 
    
 
-####Launching Application
+#### Launching Application
 Starting application is simple, just use docker compose:
 
 `docker-compose build && docker-compose up`
