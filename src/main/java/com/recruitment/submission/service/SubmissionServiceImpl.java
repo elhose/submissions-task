@@ -1,5 +1,6 @@
 package com.recruitment.submission.service;
 
+import com.recruitment.submission.dto.PresentationDTO;
 import com.recruitment.submission.dto.RejectionDTO;
 import com.recruitment.submission.dto.SubmissionDTO;
 import com.recruitment.submission.entity.Submission;
@@ -7,12 +8,14 @@ import com.recruitment.submission.entity.SubmissionStatus;
 import com.recruitment.submission.mapper.SubmissionDTOMapper;
 import com.recruitment.submission.repository.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -88,6 +91,39 @@ public class SubmissionServiceImpl implements SubmissionService {
             foundSubmission.setPublicId(generatePublicId());
             submissionRepository.save(foundSubmission);
         }, () -> throwNewIllegalArgumentException(title, SubmissionStatus.ACCEPTED));
+    }
+
+    @Override
+    public List<PresentationDTO> listActualSubmissions(String title, SubmissionStatus status) {
+        var sort = Sort.by("title").ascending().and(Sort.by("status").ascending());
+        List<Submission> foundEntities = submissionRepository.findAll(Specification.where(titleAndStatusSpec(title, status)), sort);
+        return foundEntities.stream().map(mapper::entityToPresentation).collect(Collectors.toList());
+    }
+
+    private Specification<Submission> titleAndStatusSpec(String title, SubmissionStatus submissionStatus) {
+        return ((root, criteriaQuery, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (title != null && !title.isEmpty()) {
+                predicates.add(criteriaBuilder.like(root.get("title"), "%" + title + "%"));
+            }
+            if (submissionStatus != null) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), submissionStatus));
+            }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[]{}));
+        });
+    }
+
+    @Override
+    public List<PresentationDTO> getHistory(String submissionTitle) {
+        Optional<Submission> found = submissionRepository.findByTitle(submissionTitle);
+        List<PresentationDTO> dtos = new ArrayList<>();
+        found.ifPresentOrElse(foundSubmission -> {
+            foundSubmission.getHistory().stream()
+                           .map(mapper::historyToPresentation)
+                           .collect(Collectors.toCollection(() -> dtos));
+            dtos.add(mapper.entityToPresentation(foundSubmission));
+        }, () -> throwNewIllegalArgumentException(submissionTitle));
+        return dtos;
     }
 
     private void checkForNull(String parameter) {

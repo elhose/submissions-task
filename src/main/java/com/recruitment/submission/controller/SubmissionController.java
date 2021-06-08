@@ -1,13 +1,18 @@
 package com.recruitment.submission.controller;
 
+import com.recruitment.submission.dto.PresentationDTO;
 import com.recruitment.submission.dto.RejectionDTO;
 import com.recruitment.submission.dto.SubmissionDTO;
 import com.recruitment.submission.dto.TitleDTO;
+import com.recruitment.submission.entity.SubmissionStatus;
 import com.recruitment.submission.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,6 +55,18 @@ public class SubmissionController {
     public ResponseEntity<HttpStatus> publish(@RequestBody TitleDTO titleDTO) {
         submissionService.publishSubmission(titleDTO.getTitle());
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("current")
+    public ResponseEntity<Page<PresentationDTO>> list(@RequestParam(required = false) String title, @RequestParam(required = false) SubmissionStatus status) {
+        List<PresentationDTO> filteredDtos = submissionService.listActualSubmissions(title, status);
+        return new ResponseEntity<>(new PageImpl<>(filteredDtos), HttpStatus.OK);
+    }
+
+    @GetMapping("history")
+    public ResponseEntity<List<PresentationDTO>> getSubmissionHistory(@RequestBody TitleDTO submissionTitle) {
+        List<PresentationDTO> history = submissionService.getHistory(submissionTitle.getTitle());
+        return new ResponseEntity<>(history, HttpStatus.OK);
     }
 
 }

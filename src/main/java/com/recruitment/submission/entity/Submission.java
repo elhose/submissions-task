@@ -32,7 +32,7 @@ public class Submission {
 
     private Long publicId;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk", referencedColumnName = "submission_id")
     private Set<HistorySubmission> history = new HashSet<>();
 
