@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  api_service:
+    ports:
+      - 8080:8080
+    build:
+      context: .
+    restart: always
+    depends_on:
+      - postgres
+  postgres:
+    image: "postgres:13"
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: password
