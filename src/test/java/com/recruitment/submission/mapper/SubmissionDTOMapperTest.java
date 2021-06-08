@@ -4,14 +4,17 @@ import com.recruitment.submission.dto.PresentationDTO;
 import com.recruitment.submission.dto.SubmissionDTO;
 import com.recruitment.submission.entity.HistorySubmission;
 import com.recruitment.submission.entity.Submission;
+import com.recruitment.submission.initializer.Postgres;
 import com.recruitment.submission.utils.EntityDTOUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@ContextConfiguration(initializers = {Postgres.Initializer.class})
 class SubmissionDTOMapperTest {
 
     @Autowired
