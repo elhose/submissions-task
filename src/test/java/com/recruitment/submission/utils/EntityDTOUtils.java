@@ -59,4 +59,35 @@ public class EntityDTOUtils {
         return new Random().nextLong();
     }
 
+
+    // Comparisons without ID's and Dates are used when testing DB, DB handles id's and dates
+    public static boolean compareSubmissionsWithoutIdAndDates(Submission first, Submission second) {
+        return first.getTitle().equals(second.getTitle()) &&
+                first.getContent().equals(second.getContent()) &&
+                first.getStatus().equals(second.getStatus()) &&
+                first.getReason().equals(second.getReason()) &&
+                first.getPublicId().equals(second.getPublicId()) &&
+                compareHistorySetsWithoutIdAndDates(first.getHistory(), second.getHistory());
+    }
+
+    private static boolean compareHistorySetsWithoutIdAndDates(Set<HistorySubmission> first, Set<HistorySubmission> second) {
+        if (first.size() != second.size()) {
+            return false;
+        }
+        Iterator<HistorySubmission> firstIterator = first.iterator();
+        Iterator<HistorySubmission> secondIterator = second.iterator();
+        while (firstIterator.hasNext()) {
+            if (!compareHistorySubmissionWithoutIdAndDates(firstIterator.next(), secondIterator.next())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean compareHistorySubmissionWithoutIdAndDates(HistorySubmission first, HistorySubmission second) {
+        return first.getTitle().equals(second.getTitle()) &&
+                first.getContent().equals(second.getContent()) &&
+                first.getStatus().equals(second.getStatus());
+    }
+
 }
