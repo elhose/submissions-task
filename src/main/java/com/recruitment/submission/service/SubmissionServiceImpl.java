@@ -96,7 +96,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     @Override
     public List<PresentationDTO> listActualSubmissions(String title, SubmissionStatus status) {
         var sort = Sort.by("title").ascending().and(Sort.by("status").ascending());
-        List<Submission> foundEntities = submissionRepository.findAll(Specification.where(titleAndStatusSpec(title, status)), sort);
+        List<Submission> foundEntities = submissionRepository.findAll(titleAndStatusSpec(title, status), sort);
         return foundEntities.stream().map(mapper::entityToPresentation).collect(Collectors.toList());
     }
 

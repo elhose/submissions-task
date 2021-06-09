@@ -1,6 +1,9 @@
 package com.recruitment.submission.utils;
 
+import com.recruitment.submission.dto.PresentationDTO;
+import com.recruitment.submission.dto.RejectionDTO;
 import com.recruitment.submission.dto.SubmissionDTO;
+import com.recruitment.submission.dto.TitleDTO;
 import com.recruitment.submission.entity.HistorySubmission;
 import com.recruitment.submission.entity.Submission;
 import com.recruitment.submission.entity.SubmissionStatus;
@@ -55,10 +58,35 @@ public class EntityDTOUtils {
         return historySubmission;
     }
 
-    private static Long generateLong() {
-        return new Random().nextLong();
+    public static HistorySubmission prepareHistorySubmission(String title, SubmissionStatus status) {
+        HistorySubmission historySubmission = prepareHistorySubmission();
+        historySubmission.setTitle(title);
+        historySubmission.setStatus(status);
+        return historySubmission;
     }
 
+    public static RejectionDTO prepareRejectionDTO() {
+        RejectionDTO rejectionDTO = new RejectionDTO();
+        rejectionDTO.setTitle("test-title");
+        rejectionDTO.setReason("test-reason");
+        return rejectionDTO;
+    }
+
+    public static TitleDTO prepareTitleDTO() {
+        TitleDTO titleDTO = new TitleDTO();
+        titleDTO.setTitle("test-title");
+        return titleDTO;
+    }
+
+    public static PresentationDTO preparePresentationDTO(String title, SubmissionStatus status) {
+        PresentationDTO presentationDTO = new PresentationDTO();
+        presentationDTO.setTitle(title);
+        presentationDTO.setContent("test-content");
+        presentationDTO.setStatus(status);
+        presentationDTO.setReason("test-reason");
+        presentationDTO.setPublicId(generateLong());
+        return presentationDTO;
+    }
 
     // Comparisons without ID's and Dates are used when testing DB, DB handles id's and dates
     public static boolean compareSubmissionsWithoutIdAndDates(Submission first, Submission second) {
@@ -90,4 +118,7 @@ public class EntityDTOUtils {
                 first.getStatus().equals(second.getStatus());
     }
 
+    private static Long generateLong() {
+        return new Random().nextLong();
+    }
 }
